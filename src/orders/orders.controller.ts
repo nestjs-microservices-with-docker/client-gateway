@@ -15,7 +15,12 @@ export class OrdersController {
 
   @Get()
   findAll(@Query() ordersPaginatinDto: OrdersPaginatinDto) {
-    return this.client.send({ cmd: 'find_all_orders'}, ordersPaginatinDto)
+    try {
+      const order = firstValueFrom(this.client.send({ cmd: 'find_all_orders'}, ordersPaginatinDto))
+      return order
+    } catch (error) {
+      throw new RpcException(error)
+    }
   }
 
   @Get(':id')
